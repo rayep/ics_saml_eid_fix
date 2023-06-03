@@ -1,4 +1,17 @@
-"""Test - REST Ops"""
+"""
+ICS SAML Entity ID change fix v1.0
+
+Script to fix ICS SAML null host-fqdn value issue by updating the cache with the global FQDN value.
+
+Author: Ray A.
+Email: ray@raysecure.ml
+
+(c) 2023 Ray A. All rights reserved.
+
+License:
+This project is licensed under the terms of the MIT License.
+See the LICENSE file for more information.
+"""
 
 import sys
 import ssl
@@ -9,7 +22,7 @@ from src.rest import RESTClient
 from src.auth import HTTPAuthMgr
 from src.fix import SAMLEidFix
 
-
+# SSL Context for ignoring certificate errors.
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
