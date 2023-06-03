@@ -42,6 +42,8 @@ if len(sys.argv) <= 1:
     raise SystemExit()
 
 args = arguments.parse_args()
+print()
+print('*** ICS SAML Entity ID fix - Start ***\n')
 
 while True:
     admin_password = getpass.getpass(
@@ -57,12 +59,13 @@ def get_api_key(uri, username: str, password: str = ''):
     try:
         resp = request.get(url=f"https://{uri}/api/v1/auth")
     except HTTPError as exc:
-        raise SystemExit(f"API_KEY ERROR: {exc}. Please try again!") from None
+        raise SystemExit(f"\n #!#! API_KEY ERROR: {exc}. \
+Please check the admin credentials!") from None
     return resp['api_key']
 
 
 api_key = get_api_key(args.host, args.username, admin_password)
-print("API_KEY SUCCESS: REST API login successful\n")
+print("\n^^^ API_KEY SUCCESS: REST API login successful ^^^\n")
 
 auth = HTTPAuthMgr(uri=args.host,
                    username=api_key, password='')
@@ -74,3 +77,5 @@ if args.dry:
     saml_fix.start(dry_run=True)
 else:
     saml_fix.start()
+
+print('*** ICS SAML Entity ID fix - Complete ***')

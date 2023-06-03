@@ -43,7 +43,7 @@ class SAMLEidFix():
                                   }})
                 else:
                     print(
-                        f"# {_['name']} # has a valid host-fqdn value. Ignoring!\n")
+                        f"# {_['name']} # has valid host-fqdn value. Ignoring!\n")
 
     def start(self, dry_run: bool = False):
         """Start the SAML Eid update operation"""
@@ -51,12 +51,12 @@ class SAMLEidFix():
         self._filter_by_saml_type()
         if dry_run:
             if self.saml_servers:
-                print("DRY RUN: SAML servers with null host-fqdn value:\n")
+                print("^^^ DRY RUN: SAML servers with null host-fqdn value: ^^^\n")
                 for server in self.saml_servers:
                     print(server)
             else:
                 print(
-                    "DRY RUN: All SAML servers have valid host-fqdn value. No change required!\n")
+                    "^^^ DRY RUN: All SAML servers have valid host-fqdn value. No change required! ^^^\n")
         else:
             self._update_saml_fqdn()
 
