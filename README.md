@@ -33,13 +33,13 @@ optional arguments:
  ---
  #### Examples:
  
- ##### _Apply the fix to VPN server 192.168.1.100 - use admin account 'adminuser' for API operations._
+ ##### _Apply the fix to VPN server 10.1.1.100 - use admin account 'adminuser' for API operations._
  
  ```
- > python3 saml_eid_fix.py --host 192.168.1.100 --username adminuser
+ > python3 saml_eid_fix.py --host 10.1.1.100 --username adminuser
  ```
  
- ##### _Dry run operation - Evaluate if the VPN server has any problematic SAML instances_
+ ##### _Dry run operation - Evaluate if the VPN server has any problematic SAML instances. No PUT request will be sent_
  ```
- > python3 saml_eid_fix.py --host 191.168.1.100 --username adminuser --dry-run
+ > python3 saml_eid_fix.py --host 10.1.1.100 --username adminuser --dry-run
  ```
