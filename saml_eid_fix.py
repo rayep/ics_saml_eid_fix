@@ -57,6 +57,9 @@ if len(sys.argv) <= 1:
 args = arguments.parse_args()
 print()
 print('*** ICS SAML Entity ID fix - Start ***\n')
+print(
+    'WARNING: Please take a full device backup or \
+Auth Servers XML backup before proceeding with this change!\n')
 
 while True:
     admin_password = getpass.getpass(
@@ -91,4 +94,4 @@ if args.dry:
 else:
     saml_fix.start()
 
-print('*** ICS SAML Entity ID fix - Complete ***')
+print('\n*** ICS SAML Entity ID fix - Complete ***')
