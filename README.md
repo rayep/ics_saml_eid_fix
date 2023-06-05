@@ -9,6 +9,8 @@ Download the script from [here](https://github.com/rayep/ics_saml_eid_fix/archiv
 - Python 3.x _(Standalone or Windows Store version)_ | _Created & Tested using Python 3.9_
 - Admin user account with REST API access enabled. <br>
 _For enabling REST API access. Please refer to the [REST API guide](https://help.ivanti.com/ps/help/en_US/ICS/22.x/apig/rest_api_soln_guide/ovw.htm#_Toc53640462)_
+- Take Full device (system & user config) or Auth Servers XML backup before proceeding with this change. <br>
+**_(Dry-Run option can be used for evaluation)_**
 
 ---
 #### Workflow:
@@ -17,6 +19,7 @@ _For enabling REST API access. Please refer to the [REST API guide](https://help
 - Downloads all auth-server config and parses the SAML auth-type instances.
 - Check if the SAML instance has valid host-fqdn value.
 - If an instance with NULL host-fqdn value found, issues HTTP PUT request with correct FQDN value.
+- Validates the entity ID value before and after change. If any change is highlighted, then the admin should restore the config using backup. 
 
 ---
 #### Usage:
