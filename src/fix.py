@@ -102,9 +102,11 @@ class SAMLEidFix():
             if self._saml_servers[server] != eid:
                 print()
                 print(f"NAME: {server}")
+                print(f"EXPECTED-FQDN: {self._saml_servers[server]['saml']['settings']['host-fqdn']}")
+                print(f"ACTUAL-FQDN: {eid['saml']['settings']['host-fqdn']}")
                 print(
-                    f"EXPECTED: {self._saml_servers[server]['saml']['settings']['sa-entity-id']}"
+                    f"EXPECTED-EID: {self._saml_servers[server]['saml']['settings']['sa-entity-id']}"
                 )
-                print(f"ACTUAL: {eid['saml']['settings']['sa-entity-id']}")
+                print(f"ACTUAL-EID: {eid['saml']['settings']['sa-entity-id']}")
         raise EntityIDMismatch(
-            "SAML Entity ID mismatch. Please revert the change using backup.")
+            "SAML Entity ID or FQDN mismatch. Please revert the change using backup.")
