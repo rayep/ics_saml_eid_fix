@@ -3,6 +3,10 @@
 from urllib.parse import quote
 
 
+class EntityIDMismatch(Exception):
+    """Entity ID mismatch after update"""
+
+
 class SAMLEidFix():
     """SAML Entity ID change fix"""
 
@@ -14,8 +18,9 @@ class SAMLEidFix():
         self.client = rest_client
         self.host = host
         self._auth_servers = []
-        self.saml_servers = {}
+        self._saml_servers = {}
         self._saml_fqdn = ''
+        self._post_update = {}
         self._fetch_saml_fqdn()
 
     def _fetch_saml_fqdn(self):
@@ -35,7 +40,7 @@ class SAMLEidFix():
                 print(f"Found SAML server - # {_['name']} #")
                 if _['saml']['settings']['host-fqdn'] == "":
                     print(f"*** {_['name']} *** has null host-fqdn value.\n")
-                    self.saml_servers.update(
+                    self._saml_servers.update(
                         {server: {'name': _['name'], 'saml':
                                   {'settings': {
                                       'host-fqdn': self._saml_fqdn,
@@ -50,10 +55,12 @@ class SAMLEidFix():
         self._fetch_auth_servers()
         self._filter_by_saml_type()
         if dry_run:
-            if self.saml_servers:
+            if self._saml_servers:
                 print("^^^ DRY RUN: SAML servers with null host-fqdn value: ^^^\n")
-                for server in self.saml_servers:
-                    print(server)
+                for server in self._saml_servers:
+                    print(f"Name: {server}")
+                    print(
+                        f"Entity-ID: {server['saml']['settings']['sa-entity-id']}")
             else:
                 print(
                     "^^^ DRY RUN: All SAML servers have valid host-fqdn value. No change required! ^^^\n")
@@ -62,11 +69,42 @@ class SAMLEidFix():
 
     def _update_saml_fqdn(self):
 
-        if self.saml_servers:
+        if self._saml_servers:
             print("Starting to update SAML host-fqdn values...\n")
-            for server, data in self.saml_servers.items():
+            for server, data in self._saml_servers.items():
                 self.client.put(
-                    f'https://{self.host}{self.auth_server}{server}', data=data)
+                    f'https://{self.host}{self.auth_server}/{server}', data=data)
                 print(f"UPDATE_FQDN SUCCESS: SAML server - $ {server} $")
+            self._validate()
         else:
             print("All SAML servers have valid host-fqdn value. No change required!\n")
+
+    def _validate(self):
+        """Validate the fix by comparing the fqdn & entity ID values post update"""
+        for server in self._saml_servers:
+            _ = self.client.get(
+                f'https://{self.host}{self.auth_server}/{server}')
+            print(f"\nValidating the fix for # {server} #")
+            self._post_update.update(
+                {server: {'name': _['name'], 'saml':
+                          {'settings': {
+                              'host-fqdn': _['saml']['settings']['host-fqdn'],
+                              'sa-entity-id': _['saml']['settings']['sa-entity-id']}}
+                          }})
+        if self._saml_servers != self._post_update:
+            self._print_eid_mismatch()
+        else:
+            print("\nValidation successful. Fix has been successfully applied.")
+
+    def _print_eid_mismatch(self):
+        """Print Entity ID mismatch results"""
+        for server, eid in self._post_update.items():
+            if self._saml_servers[server] != eid:
+                print()
+                print(f"NAME: {server}")
+                print(
+                    f"EXPECTED: {self._saml_servers[server]['saml']['settings']['sa-entity-id']}"
+                )
+                print(f"ACTUAL: {eid['saml']['settings']['sa-entity-id']}")
+        raise EntityIDMismatch(
+            "SAML Entity ID mismatch. Please revert the change using backup.")
