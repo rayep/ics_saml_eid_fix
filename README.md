@@ -1,6 +1,8 @@
 ### Ivanti Connect Secure SAML Entity ID change fix.
 Script to fix ICS SAML null host-fqdn value issue by updating the cache with the global FQDN value.
 
+Download the script from [here](https://github.com/rayep/ics_saml_eid_fix/archive/refs/heads/master.zip)
+
 ---
 #### Prerequisites:
 
