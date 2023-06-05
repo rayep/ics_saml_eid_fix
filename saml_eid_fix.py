@@ -35,8 +35,8 @@ else:
 arguments = argparse.ArgumentParser(
     prog='ICS SAML Entity ID fix',
     usage='python3 saml_eid_fix.py [-h] --host HOST --username USERNAME [--dry-run]',
-    description='Script to fix ICS SAML null host-fqdn issue by Ray A.',
-    epilog='(c) Ray A. v1.0')
+    description='Script to fix ICS SAML null host-fqdn issue.',
+    epilog='Created by Ray A. - v1.0')
 
 arguments.add_argument('--host', action='store', type=str,
                        dest='host', required=True,
