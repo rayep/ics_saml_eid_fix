@@ -36,19 +36,22 @@ class SAMLEidFix():
         for server in self._auth_servers:
             _ = self.client.get(
                 f'https://{self.host}{self.auth_server}/{server}')
-            if _['auth-server-type'] == 'saml':
-                print(f"Found SAML server - # {_['name']} #")
-                if _['saml']['settings']['host-fqdn'] == "":
-                    print(f"*** {_['name']} *** has null host-fqdn value.\n")
-                    self._saml_servers.update(
-                        {server: {'name': _['name'], 'saml':
-                                  {'settings': {
-                                      'host-fqdn': self._saml_fqdn,
-                                      'sa-entity-id': _['saml']['settings']['sa-entity-id']}}
-                                  }})
-                else:
-                    print(
-                        f"# {_['name']} # has valid host-fqdn value. Ignoring!\n")
+            try:
+                if _['auth-server-type'] == 'saml':
+                    print(f"Found SAML server - # {_['name']} #")
+                    if _['saml']['settings']['host-fqdn'] == "":
+                        print(f"*** {_['name']} *** has null host-fqdn value.\n")
+                        self._saml_servers.update(
+                            {server: {'name': _['name'], 'saml':
+                                    {'settings': {
+                                        'host-fqdn': self._saml_fqdn,
+                                        'sa-entity-id': _['saml']['settings']['sa-entity-id']}}
+                                    }})
+                    else:
+                        print(
+                            f"# {_['name']} # has valid host-fqdn value. Ignoring!\n")
+            except KeyError:
+                pass
 
     def start(self, dry_run: bool = False):
         """Start the SAML Eid update operation"""
