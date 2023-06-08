@@ -1,6 +1,6 @@
 """SAML Entity ID - Fix (Ray A.)"""
 
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 
 class EntityIDMismatch(Exception):
@@ -61,7 +61,7 @@ class SAMLEidFix():
             if self._saml_servers:
                 print("^^^ DRY RUN: SAML servers with null host-fqdn value: ^^^\n")
                 for server, data in self._saml_servers.items():
-                    print(f"Name: {server}")
+                    print(f"Name: {unquote(server)}")
                     print(
                         f"Entity-ID: {data['saml']['settings']['sa-entity-id']}")
             else:
@@ -104,7 +104,7 @@ class SAMLEidFix():
         for server, eid in self._post_update.items():
             if self._saml_servers[server] != eid:
                 print()
-                print(f"NAME: {server}")
+                print(f"NAME: {unquote(server)}")
                 print(f"EXPECTED-FQDN: {self._saml_servers[server]['saml']['settings']['host-fqdn']}")
                 print(f"ACTUAL-FQDN: {eid['saml']['settings']['host-fqdn']}")
                 print(
