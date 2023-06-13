@@ -37,7 +37,7 @@ class SAMLEidFix():
             _ = self.client.get(
                 f'https://{self.host}{self.auth_server}/{server}')
             try:
-                if _['auth-server-type'] == 'saml' or _['saml']:
+                if _['saml']:
                     print(f"Found SAML server - # {_['name']} #")
                     if _['saml']['settings']['host-fqdn'] == "":
                         print(f"*** {_['name']} *** has null host-fqdn value.\n")
@@ -63,7 +63,7 @@ class SAMLEidFix():
                 for server, data in self._saml_servers.items():
                     print(f"Name: {unquote(server)}")
                     print(
-                        f"Entity-ID: {data['saml']['settings']['sa-entity-id']}")
+                        f"Entity-ID: {data['saml']['settings']['sa-entity-id']}\n")
             else:
                 print(
                     "^^^ DRY RUN: All SAML servers have valid host-fqdn value. No change required! ^^^\n")
